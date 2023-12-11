@@ -4,6 +4,7 @@ import {
   message,
   Modal,
   Result,
+  Typography,
   Upload,
   UploadFile,
   UploadProps,
@@ -30,6 +31,7 @@ import {
 } from "@ant-design/colors";
 import { ProForm } from "@ant-design/pro-components";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { Config } from "../config";
 
 export function CompareFigures() {
   const [figure1, setFigure1] = useState<UploadFile>();
@@ -41,6 +43,7 @@ export function CompareFigures() {
     onChange: (info: UploadChangeParam) => {
       setFigure1(info.file);
     },
+    accept: ".dat",
   };
 
   const [figure2, setFigure2] = useState<UploadFile>();
@@ -52,6 +55,7 @@ export function CompareFigures() {
     onChange: (info: UploadChangeParam) => {
       setFigure2(info.file);
     },
+    accept: ".dat",
   };
 
   const [threshold, setThreshold] = useState<number>(0.05);
@@ -74,11 +78,12 @@ export function CompareFigures() {
     formData.set("decimal_points", JSON.stringify(decimalPoints));
     try {
       const response: AxiosResponse<any> = await axios.post(
-        "http://127.0.0.1:7777",
+        Config.basePath,
         formData
       );
       setResult(response.data);
     } catch (e) {
+      console.log(e);
       setResult(
         (e as AxiosError<{ message: string; success?: boolean }>)?.response
           ?.data
@@ -89,6 +94,7 @@ export function CompareFigures() {
   return (
     <div>
       <div style={{ width: 800, margin: "auto" }}>
+        <Typography.Title level={3}>Compare Figures</Typography.Title>
         <ProForm submitter={false}>
           <ProForm.Item label={"计算中保留小数点"}>
             <InputNumber<number>
@@ -131,7 +137,7 @@ export function CompareFigures() {
               onChange={(v) => v && setThreshold(v)}
             />
           </ProForm.Item>
-          <ProForm.Item label={"允许超出阈值坐标数"}>
+          <ProForm.Item label={"允许超出阈值个数"}>
             <InputNumber<number>
               value={allowErrCount}
               onChange={(v) => v && setAllowErrCount(v)}
@@ -188,6 +194,11 @@ export function CompareFigures() {
         width={800}
         title={"判定结果"}
         open={!!result}
+        footer={
+          <Button type={"primary"} onClick={() => setResult(undefined)}>
+            确定
+          </Button>
+        }
         onCancel={() => setResult(undefined)}
       >
         <Result

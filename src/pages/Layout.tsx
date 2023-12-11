@@ -1,17 +1,6 @@
-import {
-  ChromeFilled,
-  CrownFilled,
-  GithubFilled,
-  InfoCircleFilled,
-  PlusCircleFilled,
-  QuestionCircleFilled,
-  SearchOutlined,
-  SmileFilled,
-  TabletFilled,
-} from "@ant-design/icons";
 import type { ProSettings } from "@ant-design/pro-components";
 import { PageContainer, ProLayout, ProCard } from "@ant-design/pro-components";
-import { Alert, Button, Input, Space } from "antd";
+import { Alert, Button, Image, Input, Typography } from "antd";
 import React, { useState } from "react";
 import { defaultProps } from "./routes";
 import {
@@ -22,6 +11,8 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { CompareFigures } from "./CompareFigures";
+import Flex from "../components/shared/Flex";
+import ShuLogo from "../assets/shu.png";
 
 export function LayoutPage() {
   const navigate = useNavigate();
@@ -48,6 +39,14 @@ export function LayoutPage() {
               heightLayoutHeader: 64,
             },
           }}
+          headerTitleRender={() => (
+            <Flex direction={"row"} align={"center"}>
+              <Image src={ShuLogo} style={{ width: 40 }} />
+              <Typography.Text strong style={{ fontSize: 16, marginLeft: 8 }}>
+                Compare Figures
+              </Typography.Text>
+            </Flex>
+          )}
           // bgLayoutImgList={[
           //   {
           //     src: "https://img.alicdn.com/imgextra/i2/O1CN01O4etvp1DvpFLKfuWq_!!6000000000279-2-tps-609-606.png",
