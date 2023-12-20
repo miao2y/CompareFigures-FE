@@ -3,10 +3,10 @@ export const Config = {
   basePath: "http://127.0.0.1:7777",
   version: "1.0.0",
 };
-if (import.meta.env.VITE_HOST && import.meta.env.VITE_PORT) {
+console.log(import.meta.env);
+if (import.meta.env.VITE_BASE) {
   // dev code
-  Config.basePath =
-    "http://" + import.meta.env.VITE_HOST + ":" + import.meta.env.VITE_PORT;
+  Config.basePath = import.meta.env.VITE_BASE;
 } else {
   // production code
   throw new Error("缺少 HOST & PORT");

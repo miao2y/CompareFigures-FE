@@ -62,7 +62,9 @@ export function CompareFigures() {
   const [allowErrCount, setAllowErrCount] = useState<number>(5);
   const [decimalPoints, setDecimalPoints] = useState<{
     [key: string]: number | null;
-  }>({});
+  }>({
+    T: 4,
+  });
 
   const [result, setResult] = useState<{
     success?: boolean;
