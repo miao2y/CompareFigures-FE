@@ -8,7 +8,13 @@ export interface CompareResultDetail {
 export interface DistanceCompareResultDetail extends CompareResultDetail {
   phase_name: string;
   a_wrong_indexes: number[];
+  a_wrong_rows?: Array<{
+    [key in string]: number;
+  }>;
   b_wrong_indexes: number[];
+  b_wrong_rows?: Array<{
+    [key in string]: number;
+  }>;
 }
 
 export interface PhaseNameCompareResultDetail extends CompareResultDetail {

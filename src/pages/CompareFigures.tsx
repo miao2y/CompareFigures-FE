@@ -42,6 +42,7 @@ export function CompareFigures() {
   const [currentStep, setCurrentStep] = useState(0);
   const figure1 = useFigure();
   const figure2 = useFigure();
+  const compareResultHook = useCompareResult();
 
   const [phaseNameCol, setPhaseNameCol] = useState<string>("phase_name");
   const [numericColumns, setNumericColumns] = useState<CheckboxValueType[]>();
@@ -54,7 +55,9 @@ export function CompareFigures() {
     T: 4,
   });
 
-  const compareResultHook = useCompareResult();
+  useEffect(() => {
+    setNumericColumns([]);
+  }, [figure1.figure, figure2.figure]);
 
   const commonNumericColumns = useMemo(() => {
     return figure1.transferResult?.columns.filter((v) => {
@@ -262,7 +265,7 @@ export function CompareFigures() {
                         <Row>
                           <Col span={12}>
                             <Typography.Title level={5}>
-                              FigureA 中相位
+                              FigureA 中相
                             </Typography.Title>
                             <List
                               dataSource={i.detail.a_phase_names_set}
@@ -289,7 +292,7 @@ export function CompareFigures() {
                           </Col>
                           <Col span={12}>
                             <Typography.Title level={5}>
-                              FigureB 中相位
+                              FigureB 中相
                             </Typography.Title>
                             <List
                               dataSource={i.detail.b_phase_names_set}
@@ -351,76 +354,58 @@ export function CompareFigures() {
                           </Descriptions.Item>
                         </Descriptions>
                         <div style={{ overflow: "scroll" }}>
-                          {i.detail.a_wrong_indexes.length > 0 && (
+                          {(i.detail?.a_wrong_rows?.length ?? 0) > 0 && (
                             <>
                               <Typography.Title level={5}>
                                 FigureA 中错误行
                               </Typography.Title>
-                              {figure1.transferResult && (
-                                <Table
-                                  bordered
-                                  scroll={{ y: 800, x: 4000 }}
-                                  pagination={false}
-                                  columns={[
-                                    {
-                                      title: "编号",
-                                      dataIndex: "key",
-                                    },
-                                    ...figure1.transferResult?.columns.map(
-                                      (i) => {
-                                        return {
+                              <Table
+                                bordered
+                                scroll={{ y: 600 }}
+                                pagination={false}
+                                columns={[
+                                  {
+                                    title: "编号",
+                                    dataIndex: "index",
+                                  },
+                                  ...(i.detail.a_wrong_rows
+                                    ? Object.keys(i.detail.a_wrong_rows[0]).map(
+                                        (i) => ({
                                           title: i,
                                           dataIndex: i,
-                                        };
-                                      }
-                                    ),
-                                  ]}
-                                  dataSource={i.detail.a_wrong_indexes.map(
-                                    (i) => {
-                                      return {
-                                        ...figure1?.transferResult?.list[i],
-                                        key: i,
-                                      };
-                                    }
-                                  )}
-                                />
-                              )}
+                                        })
+                                      )
+                                    : []),
+                                ]}
+                                dataSource={i.detail.a_wrong_rows}
+                              />
                             </>
                           )}
-                          {i.detail.b_wrong_indexes.length > 0 && (
+                          {(i.detail?.b_wrong_rows?.length ?? 0) > 0 && (
                             <>
                               <Typography.Title level={5}>
                                 FigureB 中错误行
                               </Typography.Title>
-                              {figure2.transferResult && (
-                                <Table
-                                  bordered
-                                  scroll={{ y: 800, x: 4000 }}
-                                  pagination={false}
-                                  columns={[
-                                    {
-                                      title: "编号",
-                                      dataIndex: "key",
-                                    },
-                                    ...figure2.transferResult?.columns.map(
-                                      (i) => {
-                                        return {
+                              <Table
+                                bordered
+                                scroll={{ y: 600 }}
+                                pagination={false}
+                                columns={[
+                                  {
+                                    title: "编号",
+                                    dataIndex: "index",
+                                  },
+                                  ...(i.detail.b_wrong_rows
+                                    ? Object.keys(i.detail.b_wrong_rows[0]).map(
+                                        (i) => ({
                                           title: i,
                                           dataIndex: i,
-                                        };
-                                      }
-                                    ),
-                                  ]}
-                                  dataSource={i.detail.b_wrong_indexes.map(
-                                    (i) => {
-                                      return {
-                                        ...figure2?.transferResult?.list[i],
-                                        key: i,
-                                      };
-                                    }
-                                  )}
-                                />
-                              )}
+                                        })
+                                      )
+                                    : []),
+                                ]}
+                                dataSource={i.detail.b_wrong_rows}
+                              />
                             </>
                           )}
                         </div>
@@ -433,7 +418,7 @@ export function CompareFigures() {
           )}
 
           <ProForm.Item>
-            <Button.Group>
+            <Button.Group style={{ marginTop: 16 }}>
               {currentStep >= 1 && (
                 <Button
                   onClick={() => {
