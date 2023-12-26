@@ -91,29 +91,29 @@ export function CompareFigures() {
 
   return (
     <div>
+      <Steps
+        style={{ margin: "auto", marginBottom: 16, maxWidth: 1200 }}
+        current={currentStep}
+        items={[
+          {
+            title: "上传相图",
+            description: "请上传DAT格式的相图",
+          },
+          {
+            title: "填写配置",
+            description: "选择参与距离比较的数据列、距离阈值等",
+          },
+          {
+            title: "查看结果",
+            description: "您可以在此处查看比较的详细报告",
+          },
+        ]}
+      />
       <div style={{ width: 800, margin: "auto" }}>
-        <Typography.Title level={3}>Compare Figures</Typography.Title>
-        <Steps
-          style={{ marginBottom: 16 }}
-          current={currentStep}
-          items={[
-            {
-              title: "上传相图",
-              description: "请上传DAT格式的相图",
-            },
-            {
-              title: "填写配置",
-              description: "填写参数",
-            },
-            {
-              title: "查看结果",
-            },
-          ]}
-        />
         <ProForm submitter={false} layout="vertical">
           {currentStep == 0 && (
             <>
-              <ProForm.Item label={"Figure1"}>
+              <ProForm.Item label={"FigureA"}>
                 <Upload.Dragger {...figure1.figureUploadProps}>
                   <p className="ant-upload-drag-icon">
                     {!figure1.figure && <InboxOutlined />}
@@ -134,7 +134,7 @@ export function CompareFigures() {
                   )}
                 </Upload.Dragger>
               </ProForm.Item>
-              <ProForm.Item label={"Figure2"}>
+              <ProForm.Item label={"FigureB"}>
                 <Upload.Dragger {...figure2.figureUploadProps}>
                   <p className="ant-upload-drag-icon">
                     {!figure2.figure && <InboxOutlined />}
@@ -177,41 +177,35 @@ export function CompareFigures() {
                   </Row>
                 </Checkbox.Group>
               </ProForm.Item>
-              <ProForm.Item label={"计算中保留小数点"}>
-                <InputNumber<number>
-                  addonBefore="T"
-                  value={decimalPoints?.["T"]}
-                  precision={0}
-                  onChange={(v) =>
-                    setDecimalPoints({
-                      ...decimalPoints,
-                      T: v,
-                    })
-                  }
-                />
-                <InputNumber<number>
-                  addonBefore="x(Al)"
-                  value={decimalPoints?.["x(Al)"]}
-                  precision={0}
-                  onChange={(v) =>
-                    setDecimalPoints({
-                      ...decimalPoints,
-                      "x(Al)": v,
-                    })
-                  }
-                />
-                <InputNumber<number>
-                  addonBefore="x(Zn)"
-                  value={decimalPoints?.["x(Zn)"]}
-                  precision={0}
-                  onChange={(v) =>
-                    setDecimalPoints({
-                      ...decimalPoints,
-                      "x(Zn)": v,
-                    })
-                  }
-                />
-              </ProForm.Item>
+              {(numericColumns?.length ?? 0) > 0 && (
+                <ProForm.Item label={"计算中保留小数点"}>
+                  <Row gutter={8}>
+                    {numericColumns?.map((i) => {
+                      return (
+                        <Col key={String(i)} span={8}>
+                          <InputNumber<number>
+                            style={{
+                              width: "100%",
+                              marginBottom: 8,
+                            }}
+                            addonBefore={String(i)}
+                            value={decimalPoints?.[String(i)]}
+                            precision={0}
+                            onChange={(v) => {
+                              const data = {
+                                ...decimalPoints,
+                              };
+                              data[String(i)] = v;
+                              setDecimalPoints(data);
+                            }}
+                          />
+                        </Col>
+                      );
+                    })}
+                  </Row>
+                </ProForm.Item>
+              )}
+
               <ProForm.Item label={"距离阈值(归一化后欧氏距离)"}>
                 <InputNumber<number>
                   value={threshold}
@@ -258,7 +252,7 @@ export function CompareFigures() {
                           <Descriptions.Item label={"测试结果"}>
                             {i.result ? "测试成功" : "测试失败"}
                           </Descriptions.Item>
-                          <Descriptions.Item label={"失败原因"}>
+                          <Descriptions.Item label={"测试信息"}>
                             {i.detail.message}
                           </Descriptions.Item>
                         </Descriptions>
@@ -360,6 +354,7 @@ export function CompareFigures() {
                                 FigureA 中错误行
                               </Typography.Title>
                               <Table
+                                size={"small"}
                                 bordered
                                 scroll={{ y: 600 }}
                                 pagination={false}
@@ -367,14 +362,16 @@ export function CompareFigures() {
                                   {
                                     title: "编号",
                                     dataIndex: "index",
+                                    width: 120,
                                   },
                                   ...(i.detail.a_wrong_rows
-                                    ? Object.keys(i.detail.a_wrong_rows[0]).map(
-                                        (i) => ({
+                                    ? Object.keys(i.detail.a_wrong_rows[0])
+                                        .filter((i) => i !== "index")
+                                        .map((i) => ({
                                           title: i,
                                           dataIndex: i,
-                                        })
-                                      )
+                                          width: 120,
+                                        }))
                                     : []),
                                 ]}
                                 dataSource={i.detail.a_wrong_rows}
@@ -394,14 +391,16 @@ export function CompareFigures() {
                                   {
                                     title: "编号",
                                     dataIndex: "index",
+                                    width: 120,
                                   },
                                   ...(i.detail.b_wrong_rows
-                                    ? Object.keys(i.detail.b_wrong_rows[0]).map(
-                                        (i) => ({
+                                    ? Object.keys(i.detail.b_wrong_rows[0])
+                                        .filter((i) => i !== "index")
+                                        .map((i) => ({
                                           title: i,
                                           dataIndex: i,
-                                        })
-                                      )
+                                          width: 120,
+                                        }))
                                     : []),
                                 ]}
                                 dataSource={i.detail.b_wrong_rows}
