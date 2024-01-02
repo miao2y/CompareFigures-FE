@@ -9,11 +9,16 @@ import React from "react";
 const route = {
   path: "/",
   routes: [
-    // {
-    //   path: "/",
-    //   name: "首页",
-    //   icon: <SmileFilled />,
-    // },
+    {
+      path: "/compare-figures/single",
+      name: "单图比较",
+      icon: <SmileFilled />,
+    },
+    {
+      path: "/compare-figures/multiple",
+      name: "多图比较",
+      icon: <SmileFilled />,
+    },
     // {
     //   name: "生产系统",
     //   icon: <TabletFilled />,

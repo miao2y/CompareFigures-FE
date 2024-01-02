@@ -66,6 +66,16 @@ export function useCompareResult() {
     }
     return [];
   }, [compareResult]);
+  const fileCompareResult = useMemo(() => {
+    if (compareResult) {
+      return compareResult
+        .filter((i) => i.item_name === "文件检验")
+        .map((i) => {
+          return i as CompareResult<PhaseNameCompareResultDetail>;
+        });
+    }
+    return [];
+  }, [compareResult]);
 
   const distanceCompareResult: CompareResult<DistanceCompareResultDetail>[] =
     useMemo(() => {
@@ -85,6 +95,7 @@ export function useCompareResult() {
     isSame,
     phaseCompareResult,
     distanceCompareResult,
+    fileCompareResult,
     totalTests,
     passedTests,
   };

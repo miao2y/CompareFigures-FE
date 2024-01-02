@@ -10,9 +10,10 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { CompareFigures } from "./CompareFigures";
+import { CompareFiguresSingle } from "./CompareFiguresSingle";
 import Flex from "../components/shared/Flex";
 import ShuLogo from "../assets/shu.png";
+import { CompareFiguresMultiple } from "./CompareFiguresMultiple";
 
 export function LayoutPage() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export function LayoutPage() {
     layout: "mix",
     splitMenus: true,
   };
+  console.log(location);
 
   const [pathname, setPathname] = useState(location.pathname);
 
@@ -142,6 +144,7 @@ export function LayoutPage() {
           menuItemRender={(item, dom) => (
             <div
               onClick={() => {
+                console.log(item.path);
                 item.path && navigate(item.path);
                 item.path && setPathname(item.path);
               }}
@@ -152,7 +155,14 @@ export function LayoutPage() {
           {...settings}
         >
           <Routes>
-            <Route path={"/compare-figures"} element={<CompareFigures />} />
+            <Route
+              path={"/compare-figures/single"}
+              element={<CompareFiguresSingle />}
+            />
+            <Route
+              path={"/compare-figures/multiple"}
+              element={<CompareFiguresMultiple />}
+            />
           </Routes>
         </ProLayout>
       </div>

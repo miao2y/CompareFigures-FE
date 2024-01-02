@@ -1,6 +1,6 @@
 export const Config = {
   // basePath: 'http://spring.oxiracetam.yijiahe.com/',
-  basePath: "http://127.0.0.1:7777",
+  basePath: "http://127.0.0.1:7777/",
   version: "1.0.0",
 };
 console.log(import.meta.env);
