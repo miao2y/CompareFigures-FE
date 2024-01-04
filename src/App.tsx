@@ -33,6 +33,10 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path={"/"} element={<Navigate to={"/compare-figures"} />} />
+            <Route
+              path={"/compare-figures"}
+              element={<Navigate to={"/compare-figures/single"} />}
+            />
             <Route index path={"/*"} element={<LayoutPage />} />
           </Routes>
         </BrowserRouter>

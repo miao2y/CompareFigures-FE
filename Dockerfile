@@ -1,4 +1,4 @@
-# Use the official Node.js runtime as the base image
+## Use the official Node.js runtime as the base image
 #FROM node:18 as build
 #
 ## Set the working directory in the container
@@ -8,7 +8,7 @@
 #COPY package*.json ./
 #
 ## Install dependencies
-#RUN yarn config set registry https://registry.npmmirror.com/
+##RUN yarn config set registry https://registry.npmmirror.com/
 #RUN yarn install
 #
 ## Copy the entire application code to the container
@@ -18,13 +18,14 @@
 #RUN yarn build
 
 # Use Nginx as the production server
-FROM node:18
+FROM nginx:alpine
 
 # Copy the built React app to Nginx's web server directory
-COPY ./dist ./compare-figures
-#COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./dist /usr/share/nginx/html
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
-RUN yarn global add serve
+# Expose port 80 for the Nginx server
+EXPOSE 80
 
 # Start Nginx when the container runs
-CMD ["serve", "."]
+CMD ["nginx", "-g", "daemon off;"]
