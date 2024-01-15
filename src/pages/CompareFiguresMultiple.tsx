@@ -47,7 +47,7 @@ export function CompareFiguresMultiple() {
   const compareResultHook = useCompareResult();
 
   const [phaseNameCol, setPhaseNameCol] = useState<string>("phase_name");
-  const [regList, setRegList] = useState<CheckboxValueType[]>();
+  const [indexList, setIndexList] = useState<CheckboxValueType[]>();
 
   const [threshold, setThreshold] = useState<number>(0.05);
   const [allowErrCount, setAllowErrCount] = useState<number>(5);
@@ -77,7 +77,7 @@ export function CompareFiguresMultiple() {
     formData.append("threshold", String(threshold));
     formData.append("allow_err_count", String(allowErrCount));
     formData.append("decimal_point", String(decimalPoint));
-    formData.append("reg_list", JSON.stringify(regList));
+    formData.append("force_column_indexes", JSON.stringify(indexList));
     formData.append("phase_name_col", phaseNameCol);
     // formData.append("figure1s[]", figure1.figures.value as any);
     // formData.append("figure2s[]", figure2.figures.value as any);
@@ -178,62 +178,17 @@ export function CompareFiguresMultiple() {
             <>
               <ProForm.Item label={"参与进行距离比较的列"}>
                 <Checkbox.Group
-                  value={regList}
+                  value={indexList}
                   onChange={(v) => {
                     console.log(v);
-                    setRegList(v);
+                    setIndexList(v);
                   }}
                 >
-                  <Row style={{ width: "100%" }}>
-                    <Col span={30}>
-                      <Checkbox
-                        style={{ width: 120 }}
-                        value={`^[f|F]\\(.*\\)$`}
-                      >
-                        f(*)
-                      </Checkbox>
-                    </Col>
-                    <Col span={30}>
-                      <Checkbox
-                        style={{ width: 120 }}
-                        value={"^[g|G]\\(.*\\)$"}
-                      >
-                        g(*)
-                      </Checkbox>
-                    </Col>
-                    <Col span={30}>
-                      <Checkbox
-                        style={{ width: 120 }}
-                        value={"^[x|X]\\(.*\\)$"}
-                      >
-                        x(*)
-                      </Checkbox>
-                    </Col>
-                    <Col span={30}>
-                      <Checkbox
-                        style={{ width: 120 }}
-                        value={"^[w|W]\\(.*\\)$"}
-                      >
-                        w(*)
-                      </Checkbox>
-                    </Col>
-
-                    <Col span={30}>
-                      <Checkbox style={{ width: 120 }} value={"^[g|G]$"}>
-                        G
-                      </Checkbox>
-                    </Col>
-                    <Col span={30}>
-                      <Checkbox style={{ width: 120 }} value={"^[h|H]$"}>
-                        H
-                      </Checkbox>
-                    </Col>
-                    <Col span={30}>
-                      <Checkbox style={{ width: 120 }} value={"^[s|S]$"}>
-                        S
-                      </Checkbox>
-                    </Col>
-                  </Row>
+                  {new Array(10).fill(0).map((i, index) => (
+                    <Checkbox key={index} value={index}>
+                      {index}
+                    </Checkbox>
+                  ))}
                 </Checkbox.Group>
               </ProForm.Item>
               <ProForm.Item label={"计算中保留小数点"}>
